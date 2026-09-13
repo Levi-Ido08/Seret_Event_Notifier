@@ -1,0 +1,32 @@
+name: Run Seret Checker
+
+on:
+  schedule:
+    - cron: '17 */2 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install beautifulsoup4 playwright
+          playwright install chromium
+
+      - name: Run script
+        env:
+          IDO_APP_PASSWORD: ${{ secrets.IDO_APP_PASSWORD }}
+          SENDER_EMAIL: "levido08@gmail.com"
+          RECEIVER_EMAIL: "levi0080@gmail.com"
+        run: |
+          python checker.py
