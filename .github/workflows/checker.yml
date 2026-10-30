@@ -5,6 +5,9 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   run-checker:
     runs-on: ubuntu-latest
@@ -30,3 +33,11 @@ jobs:
           RECEIVER_EMAIL: "levi0080@gmail.com"
         run: |
           python checker.py
+
+      - name: Commit and push changes if cache updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add seret_cache.json
+          git diff --staged --quiet || git commit -m "Update seret cache [skip ci]"
+          git push
