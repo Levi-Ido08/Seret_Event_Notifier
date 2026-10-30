@@ -52,24 +52,26 @@ def get_events_list():
 
     soup = BeautifulSoup(html_content, 'html.parser')
     
-    main_content = soup.find('div', id='maincontent')
+    cards = soup.find_all('article', class_='sp-card')
     
     items = []
-    if main_content:
-        links = main_content.find_all('a', href=True)
-        for link_tag in links:
+    for card in cards:
+        link_tag = card.find('h2').find('a') if card.find('h2') else card.find('a', href=True)
+        
+        if link_tag and 'href' in link_tag.attrs:
             link = link_tag['href']
             if not link.startswith('http'):
-                link = BASE_URL + '/' + link.lstrip('/')
+                link = BASE_URL.rstrip('/') + '/' + link.lstrip('/')
 
             title = link_tag.get_text(strip=True)
             if not title:
                 title = link
 
-            items.append({
-                'title': title,
-                'link': link,
-            })
+            if not any(item['link'] == link for item in items):
+                items.append({
+                    'title': title,
+                    'link': link,
+                })
 
     return items
 
