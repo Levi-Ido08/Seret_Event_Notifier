@@ -103,9 +103,10 @@ def main():
             print(f"Link: {item['link']}\n")
 
         send_email(new_items)
-        save_cache(current_items)
     else:
         print('No New Updates Found.')
+
+    save_cache(current_items)
 
 
 if __name__ == '__main__':
