@@ -44,9 +44,14 @@ def send_email(new_items):
 def get_events_list():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+        page = browser.new_page(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
-        page.goto(URL, wait_until='domcontentloaded')
+        page.goto(URL, wait_until='networkidle')
+        try:
+            page.wait_for_selector('article.sp-card', timeout=15000)
+        except Exception:
+            pass
+
         html_content = page.content()
         browser.close()
 
