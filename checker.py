@@ -73,19 +73,24 @@ def get_events_list():
                     'link': link,
                 })
 
+    print(f"DEBUG: Found {len(items)} items from web: {items}")
     return items
 
 
 def load_cache():
     if os.path.exists(CACHE_FILE):
         with open(CACHE_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            data = json.load(f)
+            print(f"DEBUG: Loaded cached items: {data}")
+            return data
+    print("DEBUG: Cache file does not exist, returning empty list.")
     return []
 
 
 def save_cache(events):
     with open(CACHE_FILE, 'w', encoding='utf-8') as f:
         json.dump(events, f, ensure_ascii=False, indent=4)
+    print(f"DEBUG: Saved {len(events)} items to {CACHE_FILE}")
 
 
 def main():
